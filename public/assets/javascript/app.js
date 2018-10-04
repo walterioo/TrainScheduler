@@ -13,16 +13,14 @@ var database = firebase.database();
 
 function googleLogin() {
     const provider = new firebase.auth.GoogleAuthProvider();
-
     firebase.auth().signInWithPopup(provider)
-    
         .then(result => {
             const user = resul.user;
             document.write(`Hello ${user.displayname}`);
             console.log(user);
             
         })
-        .catch(console.log);
+        .catch(console.log)
 }
 
 function appendTableRow(name, destination, frequency, nextTrain, minsAway, key) {
@@ -32,9 +30,9 @@ function appendTableRow(name, destination, frequency, nextTrain, minsAway, key) 
         .append($('<td>').text(frequency))
         .append($('<td>').text(nextTrain))
         .append($('<td>').text(minsAway))
-        .append($('<td>').html('<span class="oi oi-reload reload-icon" title="reload" aria-hidden="true" data-key="' + key + '"></span>'))
-        .append($('<td>').html('<span class="oi oi-x delete-icon" data-key="' + key + '"></span>'));
-
+        .append($('<td>').html('<span class="oi oi-reload reload-icon" title="reload" aria-hidden="true" data-key="'+ key + '"></span>'))
+        .append($('<td>').html('<span class="oi oi-x delete-icon" data-key="'+ key + '"></span>'));
+    
     $('#trains').append(newTableRow);
 }
 
@@ -70,10 +68,10 @@ $(document).ready(function () {
         firstTrain = $('#first-train').val().trim();
         frequency = $('#frequency').val().trim();
         database.ref().push({
-            name: name,
-            destination: destination,
-            firstTrain: firstTrain,
-            frequency: frequency
+            name,
+            destination,
+            firstTrain,
+            frequency
         })
         $('input').val('');
     })
@@ -92,7 +90,7 @@ $(document).ready(function () {
         var nextTrain = time[0];
         var minsAway = time[1];
 
-        appendTableRow(name, destination, frequency, nextTrain, minsAway, key);
+        appendTableRow(name, destination, frequency, nextTrain, minsAway,key);
     })
     //Not Working
     $(document).on('click', '.reload-icon', function () {
@@ -102,19 +100,19 @@ $(document).ready(function () {
         //Not getting the value
         ref = database.ref().child(key);
         console.log(ref);
-
+        
         firstTrain = database.ref().child(key).firstTrain;
         frequency = database.ref().child(key).frequency;
-        console.log(firstTrain + ' ' + frequency);
-
-        time = calculateTime(firstTrain, frequency);
+        console.log(firstTrain+ ' ' + frequency);
+        
+        time = calculateTime(firstTrain,frequency);
         nextTrain = time[0];
         minsAway = time[1];
-
+        
         console.log('refresh time');
     })
 
-    $(document).on('click', '.delete-icon', function () {
+    $(document).on('click', '.delete-icon', function (){
         key = $(this).attr('data-key');
         console.log(key);
         database.ref().child(key).remove();
@@ -124,7 +122,7 @@ $(document).ready(function () {
 
 })
 
-setInterval(function () {
+setInterval(function(){
     $('#trains').empty();
     database.ref().on('child_added', function (snap) {
         var name = snap.val().name;
@@ -143,5 +141,5 @@ setInterval(function () {
         appendTableRow(name, destination, frequency, nextTrain, minsAway, key);
     })
     console.log('timers up');
-
-}, 60000)
+    
+},60000)
