@@ -15,10 +15,10 @@ function googleLogin() {
     const provider = new firebase.auth.GoogleAuthProvider();
 
     firebase.auth().signInWithPopup(provider)
-    
+
         .then(result => {
-            const user = resul.user;
-            document.write(`Hello ${user.displayname}`);
+            const user = result.user;
+            $('.jumbotron').append(`Hello ${user.displayName}`);
             console.log(user);
             
         })
